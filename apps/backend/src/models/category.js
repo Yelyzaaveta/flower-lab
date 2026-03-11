@@ -6,7 +6,7 @@ const Category = {
    */
   async findAll() {
     const sql = `
-      SELECT id, name, "prewiewImgUrl"
+      SELECT id, name, "prewiewImgUrl", description
       FROM categories
       ORDER BY id
     `;
