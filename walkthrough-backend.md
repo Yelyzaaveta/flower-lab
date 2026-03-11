@@ -131,8 +131,8 @@ docker-compose up -d db
 # 2. Встановити залежності
 cd apps/backend && npm install
 
-# 3. Створити .env (скопіювати .env.example, заповнити Cloudinary та JWT_SECRET)
-cp .env.example .env
+# 3. Створити .env (скопіювати .env, заповнити Cloudinary та JWT_SECRET)
+mkdir .env
 
 # 4. Запустити міграції
 npm run migrate
@@ -146,3 +146,4 @@ npm run dev
 
 - **Email:** `admin@flowerstore.com`
 - **Password:** `admin123`
+
