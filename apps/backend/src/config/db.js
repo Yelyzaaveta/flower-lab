@@ -6,7 +6,6 @@ const pool = new Pool({
   database: process.env.DB_NAME || "flowerlab",
   user: process.env.DB_USER || "postgres",
   password: process.env.DB_PASSWORD || "postgres",
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
 
 pool.on("error", (err) => {
