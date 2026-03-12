@@ -17,6 +17,7 @@ import Image from "next/image";
 import { createBouquet } from "@/app/api/bouquets";
 import { Bouquet, CreateBouquetData } from "@/lib/types/bouquet";
 import { Plus } from "lucide-react";
+import CategoryMultiSelect from "./category-multi-select";
 
 interface CreateBouquetDialogProps {
   onCreate: (newBouquet: Bouquet) => void;
@@ -31,7 +32,7 @@ export default function CreateBouquetDialog({
   const [longDescription, setLongDescription] = useState("");
   const [flowersAmount, setFlowersAmount] = useState(0);
   const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [error, setError] = useState("");
@@ -62,7 +63,7 @@ export default function CreateBouquetDialog({
         longDescription,
         flowersAmount,
         price,
-        category,
+        categories,
         imgUrl: previewFile || undefined,
       };
 
@@ -75,7 +76,7 @@ export default function CreateBouquetDialog({
       setLongDescription("");
       setFlowersAmount(0);
       setPrice(0);
-      setCategory("");
+      setCategories([]);
       setPreviewFile(null);
       setPreviewUrl("");
       setError("");
@@ -154,12 +155,11 @@ export default function CreateBouquetDialog({
               />
             </div>
 
-            <div className="flex flex-col space-y-2">
-              <Label>Категорія</Label>
-              <Input
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="Введіть категорію"
+            <div className="flex flex-col space-y-2 min-w-[200px]">
+              <Label>Категорії</Label>
+              <CategoryMultiSelect
+                selected={categories}
+                onChange={setCategories}
               />
             </div>
           </div>

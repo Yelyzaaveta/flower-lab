@@ -11,8 +11,15 @@ export default function BouquetCharacteristicsSection({
   return (
     <section className="flex justify-between">
       <div className="relative">
-        <div className="absolute top-5 -right-6 w-fit px-3 py-2 rounded-xl bg-[#9AF24B] text-[#4A4747] font-medium">
-          {bouquet.category}
+        <div className="absolute top-5 -right-6 flex flex-col gap-1">
+          {(bouquet.categories ?? []).map((cat) => (
+            <span
+              key={cat}
+              className="w-fit px-3 py-2 rounded-xl bg-[#9AF24B] text-[#4A4747] font-medium"
+            >
+              {cat}
+            </span>
+          ))}
         </div>
         <Image
           src={bouquet.imgUrl}

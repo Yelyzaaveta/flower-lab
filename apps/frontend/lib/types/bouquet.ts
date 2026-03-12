@@ -4,7 +4,7 @@ export type Bouquet = {
   imgUrl: string
   shortDescription: string
   longDescription: string
-  category: string
+  categories: string[]
   price: number
   flowersAmount: number
   buyAmount: number
@@ -17,8 +17,8 @@ export interface UpdateBouquetData {
   shortDescription?: string;
   longDescription?: string;
   price?: number;
-  flowersAmount?: number
-  category?: string;
+  flowersAmount?: number;
+  categories?: string[];
   imgUrl?: File | string;
 }
 
@@ -28,7 +28,7 @@ export interface CreateBouquetData {
   longDescription?: string;
   flowersAmount?: number;
   price: number;
-  category?: string;
+  categories?: string[];
   imgUrl?: File | string;
 }
 

@@ -73,7 +73,9 @@ export const updateBouquet = async (id: number, data: UpdateBouquetData) => {
     if (data.shortDescription) formData.append("shortDescription", data.shortDescription);
     if (data.flowersAmount !== undefined) formData.append("flowersAmount", data.flowersAmount.toString())
     if (data.price !== undefined) formData.append("price", data.price.toString());
-    if (data.category) formData.append("category", data.category);
+    if (data.categories) {
+        data.categories.forEach((c) => formData.append("categories", c));
+    }
     if (data.imgUrl instanceof File) {
         formData.append("img", data.imgUrl);
     }
@@ -104,7 +106,9 @@ export const createBouquet = async (data: CreateBouquetData): Promise<{ data: Bo
     if (data.longDescription) formData.append("longDescription", data.longDescription);
     if (data.flowersAmount !== undefined) formData.append("flowersAmount", data.flowersAmount.toString());
     if (data.price !== undefined) formData.append("price", data.price.toString());
-    if (data.category) formData.append("category", data.category);
+    if (data.categories) {
+        data.categories.forEach((c) => formData.append("categories", c));
+    }
     if (data.imgUrl instanceof File) {
         formData.append("img", data.imgUrl);
     }

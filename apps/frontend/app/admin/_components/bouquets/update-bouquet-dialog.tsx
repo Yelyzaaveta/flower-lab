@@ -17,6 +17,7 @@ import Image from "next/image";
 import { updateBouquet } from "@/app/api/bouquets";
 import { Bouquet, UpdateBouquetData } from "@/lib/types/bouquet";
 import { PenSquare } from "lucide-react";
+import CategoryMultiSelect from "./category-multi-select";
 
 interface UpdateBouquetDialogProps {
   bouquet: Bouquet;
@@ -37,7 +38,9 @@ export default function UpdateBouquetDialog({
   );
   const [flowersAmount, setFlowersAmount] = useState(bouquet.flowersAmount);
   const [price, setPrice] = useState(bouquet.price);
-  const [category, setCategory] = useState(bouquet.category);
+  const [categories, setCategories] = useState<string[]>(
+    bouquet.categories ?? [],
+  );
   const [previewFile, setPreviewFile] = useState<File | string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>(bouquet.imgUrl || "");
   const [error, setError] = useState("");
@@ -68,7 +71,7 @@ export default function UpdateBouquetDialog({
         longDescription,
         flowersAmount,
         price,
-        category,
+        categories,
         imgUrl: previewFile ?? previewUrl,
       };
 
@@ -155,17 +158,15 @@ export default function UpdateBouquetDialog({
               />
             </div>
 
-            <div className="flex flex-col space-y-2">
-              <Label>Категорія</Label>
-              <Input
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="Введіть категорію"
+            <div className="flex flex-col space-y-2 min-w-[200px]">
+              <Label>Категорії</Label>
+              <CategoryMultiSelect
+                selected={categories}
+                onChange={setCategories}
               />
             </div>
           </div>
 
-         
           <div className="flex flex-col space-y-2">
             <Label>Картинка</Label>
             {previewUrl ? (

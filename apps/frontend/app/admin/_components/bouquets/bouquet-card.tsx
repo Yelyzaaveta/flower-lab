@@ -38,7 +38,7 @@ export default function BouquetCard({
           label="Повний опис:"
           value={bouquet.longDescription}
         />
-        <CharacteristicItem label="Категорія:" value={bouquet.category} />
+        <CharacteristicItem label="Категорії:" value={(bouquet.categories ?? []).join(", ")} />
         <CharacteristicItem label="Вартість:" value={String(bouquet.price)} />
         <CharacteristicItem
           label="Кількість квітів у букеті:"
