@@ -1,9 +1,17 @@
-export type LoginCredentials = {
+export interface AdminData {
+    id: number;
     email: string;
-    password: string;
-};
+    role: string;
+    token: string;
+}
 
-export type AuthResponse = {
-    success: boolean;
-    message?: string;
-};
+export interface LoginResponse {
+    data: AdminData;
+}
+
+export interface ErrorResponse {
+    error: {
+        code: string;
+        message: string;
+    };
+}

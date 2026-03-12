@@ -17,7 +17,7 @@ export default function CategoryCharacteristicsSection({
 
       <div className="flex space-x-25">
         <Image
-          src="/hero-section.svg"
+          src={category.previewImgUrl}
           alt="Category image"
           width={300}
           height={300}

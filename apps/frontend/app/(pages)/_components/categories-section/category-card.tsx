@@ -11,7 +11,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <div className="flex flex-col items-center p-3 bg-white rounded-xl space-y-3">
       <Image
-        src="/hero-section.svg"
+        src={category.previewImgUrl}
         alt="Category Image"
         width={200}
         height={200}

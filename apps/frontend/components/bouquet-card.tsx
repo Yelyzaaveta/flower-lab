@@ -10,7 +10,7 @@ export default function BouquetCard({ bouquet }: BouquteCardProps) {
   return (
     <div className="bg-white p-3 flex flex-col items-center rounded-2xl lg:w-90 2xl:w-100 ">
       <Image
-        src="/hero-section.svg"
+        src={bouquet.imgUrl}
         alt="Bouquet Image"
         width={300}
         height={300}

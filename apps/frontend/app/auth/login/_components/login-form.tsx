@@ -4,7 +4,9 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { AuthResponse } from "@/lib/types/auth";
+import { login } from "@/app/api/auth";
+import type { AdminData } from "@/lib/types/auth";
+
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -18,33 +20,23 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const { data }: { data: AdminData } = await login(email, password);
 
-      const data = (await response.json()) as AuthResponse;
+      localStorage.setItem("admin", JSON.stringify(data));
 
-      if (data.success) {
-        router.push("/");
-        router.refresh();
-      } else {
-        setError(data.message || "Login failed");
-      }
-    } catch {
-      setError("An error occurred. Please try again.");
+      router.push("/admin");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || "Сталася помилка. Будь ласка, спробуйте ще раз");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
       <div className="space-y-2">
-        <label htmlFor="username" className="block text-sm font-medium">
+        <label htmlFor="email" className="block text-sm font-medium">
           Email
         </label>
         <Input
@@ -52,26 +44,24 @@ export function LoginForm() {
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
+          placeholder="Введіть емейл"
           required
           disabled={loading}
-          className="w-full"
         />
       </div>
 
       <div className="space-y-2">
         <label htmlFor="password" className="block text-sm font-medium">
-          Password
+          Пароль
         </label>
         <Input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
+          placeholder="Введіть пароль"
           required
           disabled={loading}
-          className="w-full"
         />
       </div>
 
@@ -81,8 +71,12 @@ export function LoginForm() {
         </div>
       )}
 
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Signing in..." : "Sign In"}
+      <Button
+        type="submit"
+        className="w-fit self-center px-10 py-5 bg-[#E55473] text-white font-semibold text-lg rounded-lg shadow-md hover:bg-[#d94366] focus:outline-none focus:ring-2 focus:ring-[#E55473]/50 focus:ring-offset-2 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
+        disabled={loading}
+      >
+        {loading ? "Вхід..." : "Увійти"}
       </Button>
     </form>
   );

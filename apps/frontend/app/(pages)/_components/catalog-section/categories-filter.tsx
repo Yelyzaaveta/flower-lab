@@ -25,11 +25,11 @@ export default function CategoriesFilter({
     fetchCategories();
   }, []);
 
-  const toggleCategory = (name: string) => {
-    if (selectedCategories.includes(name)) {
-      onChange(selectedCategories.filter((c) => c !== name));
-    } else {
+  const toggleCategory = (name: string, checked: boolean) => {
+    if (checked) {
       onChange([...selectedCategories, name]);
+    } else {
+      onChange(selectedCategories.filter((c) => c !== name));
     }
   };
 
@@ -43,7 +43,9 @@ export default function CategoriesFilter({
           <Checkbox
             id={`category-${category.id}`}
             checked={selectedCategories.includes(category.name)}
-            onCheckedChange={() => toggleCategory(category.name)}
+            onCheckedChange={(checked) =>
+              toggleCategory(category.name, Boolean(checked))
+            }
           />
 
           <Label htmlFor={`category-${category.id}`}>{category.name}</Label>
