@@ -19,8 +19,8 @@ const Category = {
    */
   async findById(id) {
     const sql = `
-      SELECT c.id, c.name, c.description,
-             (SELECT COUNT(*) FROM bouquets b WHERE b.category = c.name)::int AS "bouquetsAmount"
+      SELECT c.id, c.name, c.description, c."previewImgUrl",
+             (SELECT COUNT(*) FROM bouquets b WHERE c.name = ANY(b.categories))::int AS "bouquetsAmount"
       FROM categories c
       WHERE c.id = $1
     `;
