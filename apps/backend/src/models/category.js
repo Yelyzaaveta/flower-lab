@@ -6,7 +6,7 @@ const Category = {
    */
   async findAll() {
     const sql = `
-      SELECT id, name, "prewiewImgUrl", description
+      SELECT id, name, "previewImgUrl", description
       FROM categories
       ORDER BY id
     `;
@@ -33,14 +33,14 @@ const Category = {
    */
   async create(data) {
     const sql = `
-      INSERT INTO categories (name, description, "prewiewImgUrl")
+      INSERT INTO categories (name, description, "previewImgUrl")
       VALUES ($1, $2, $3)
-      RETURNING id, name, description, "prewiewImgUrl", "creationDate", "updationDate"
+      RETURNING id, name, description, "previewImgUrl", "creationDate", "updationDate"
     `;
     const params = [
       data.name,
       data.description || "",
-      data.prewiewImgUrl || "",
+      data.previewImgUrl || "",
     ];
     const { rows } = await db.query(sql, params);
     return rows[0];
@@ -50,7 +50,7 @@ const Category = {
    * Update a category.
    */
   async update(id, data) {
-    const allowedFields = ["name", "description", "prewiewImgUrl"];
+    const allowedFields = ["name", "description", "previewImgUrl"];
 
     const setClauses = [];
     const params = [];
