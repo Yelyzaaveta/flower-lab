@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS bouquets (
   "imgUrl" TEXT,
   "shortDescription" TEXT,
   "longDescription" TEXT,
-  category VARCHAR(50) REFERENCES categories(name) ON DELETE SET NULL,
+  categories TEXT[] DEFAULT '{}',
   price INTEGER NOT NULL,
   "flowersAmount" INTEGER DEFAULT 0,
   "buyAmount" INTEGER DEFAULT 0,
@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS bouquets (
   "updationDate" TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_bouquets_category ON bouquets(category);
+CREATE INDEX IF NOT EXISTS idx_bouquets_categories ON bouquets USING GIN(categories);
 CREATE INDEX IF NOT EXISTS idx_bouquets_price ON bouquets(price);
 CREATE INDEX IF NOT EXISTS idx_bouquets_updation_id ON bouquets("updationDate" DESC, id DESC);
