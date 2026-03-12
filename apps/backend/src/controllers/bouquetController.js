@@ -5,41 +5,33 @@ const bouquetController = {
    * GET /bouquets
    * List bouquets with cursor pagination + optional filters.
    */
-  async getAll(req, res, next) {
-    try {
-      const { limit, lastId, priceRange, category } = req.body;
+async getAll(req, res, next) {
+  try {
+    const { limit, lastId, priceFrom, priceTo, category } = req.query;
 
-      // Support both GET query params and body
-      const options = {
-        limit: parseInt(limit || req.query.limit, 10) || 10,
-        lastId: parseInt(lastId || req.query.lastId, 10) || undefined,
+    const options = {
+      limit: limit ? parseInt(limit, 10) : 10,
+      lastId: lastId ? parseInt(lastId, 10) : undefined,
+    };
+
+    if (priceFrom !== undefined || priceTo !== undefined) {
+      options.priceRange = {
+        from: priceFrom ? parseInt(priceFrom, 10) : undefined,
+        to: priceTo ? parseInt(priceTo, 10) : undefined,
       };
-
-      // Price range
-      if (priceRange) {
-        options.priceRange = {
-          from:
-            priceRange.from !== undefined
-              ? parseInt(priceRange.from, 10)
-              : undefined,
-          to:
-            priceRange.to !== undefined
-              ? parseInt(priceRange.to, 10)
-              : undefined,
-        };
-      }
-
-      // Category (array)
-      if (category) {
-        options.category = Array.isArray(category) ? category : [category];
-      }
-
-      const result = await Bouquet.findAll(options);
-      res.json(result);
-    } catch (err) {
-      next(err);
     }
-  },
+
+    if (category) {
+      options.category = Array.isArray(category) ? category : [category];
+    }
+
+    const result = await Bouquet.findAll(options);
+
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+},
 
   /**
    * GET /bouquets/:id
