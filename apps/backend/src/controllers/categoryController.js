@@ -46,7 +46,7 @@ const categoryController = {
     try {
       const data = req.body;
       if (req.file) {
-        data.prewiewImgUrl = req.file.path;
+        data.previewImgUrl = req.file.path;
       }
 
       if (!data.name) {
@@ -75,7 +75,7 @@ const categoryController = {
       const data = req.body;
 
       if (req.file) {
-        data.prewiewImgUrl = req.file.path;
+        data.previewImgUrl = req.file.path;
       }
 
       const result = await Category.update(parseInt(id, 10), data);

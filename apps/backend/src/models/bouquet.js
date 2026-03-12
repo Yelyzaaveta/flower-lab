@@ -52,7 +52,7 @@ const Bouquet = {
 
     const sql = `
       SELECT id, name, "imgUrl", "shortDescription", category, price,
-             "creationDate", "updationDate"
+             "creationDate", "updationDate", "longDescription", "flowersAmount"
       FROM bouquets
       ${where}
       ORDER BY "updationDate" DESC, id DESC
