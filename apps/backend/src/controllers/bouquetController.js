@@ -53,7 +53,7 @@ async getAll(req, res, next) {
 
       const relatedBouquets = await Bouquet.findRelated(
         bouquet.id,
-        bouquet.category,
+        bouquet.categories,
         bouquet.price,
       );
 

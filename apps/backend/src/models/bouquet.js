@@ -35,10 +35,10 @@ const Bouquet = {
       }
     }
 
-    // Category filter (array)
+    // Category filter (array overlap)
     if (category && category.length > 0) {
       paramIdx++;
-      conditions.push(`category = ANY($${paramIdx})`);
+      conditions.push(`categories && $${paramIdx}::text[]`);
       params.push(category);
     }
 
@@ -51,7 +51,7 @@ const Bouquet = {
     params.push(fetchLimit);
 
     const sql = `
-      SELECT id, name, "imgUrl", "shortDescription", category, price,
+      SELECT id, name, "imgUrl", "shortDescription", categories, price,
              "creationDate", "updationDate", "longDescription", "flowersAmount"
       FROM bouquets
       ${where}
@@ -80,7 +80,7 @@ const Bouquet = {
   async findById(id) {
     const sql = `
       SELECT id, name, "imgUrl", "shortDescription", "longDescription",
-             category, price, "flowersAmount", "buyAmount",
+             categories, price, "flowersAmount", "buyAmount",
              "creationDate", "updationDate"
       FROM bouquets
       WHERE id = $1
@@ -90,17 +90,18 @@ const Bouquet = {
   },
 
   /**
-   * Get 3 related bouquets from the same category with closest price.
+   * Get 3 related bouquets sharing at least one category, with closest price.
    */
-  async findRelated(bouquetId, category, price) {
+  async findRelated(bouquetId, categories, price) {
+    if (!categories || categories.length === 0) return [];
     const sql = `
-      SELECT id, name, "imgUrl", price, "shortDescription", category
+      SELECT id, name, "imgUrl", price, "shortDescription", categories
       FROM bouquets
-      WHERE category = $1 AND id != $2
+      WHERE categories && $1 AND id != $2
       ORDER BY ABS(price - $3), id
       LIMIT 3
     `;
-    const { rows } = await db.query(sql, [category, bouquetId, price]);
+    const { rows } = await db.query(sql, [categories, bouquetId, price]);
     return rows;
   },
 
@@ -108,12 +109,18 @@ const Bouquet = {
    * Create a new bouquet.
    */
   async create(data) {
+    const categories = Array.isArray(data.categories)
+      ? data.categories
+      : data.categories
+        ? [data.categories]
+        : [];
+
     const sql = `
       INSERT INTO bouquets (name, "imgUrl", "shortDescription", "longDescription",
-                            category, price, "flowersAmount", "buyAmount")
+                            categories, price, "flowersAmount", "buyAmount")
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id, name, "imgUrl", "shortDescription", "longDescription",
-                category, price, "flowersAmount", "buyAmount",
+                categories, price, "flowersAmount", "buyAmount",
                 "creationDate", "updationDate"
     `;
     const params = [
@@ -121,7 +128,7 @@ const Bouquet = {
       data.imgUrl || "",
       data.shortDescription || "",
       data.longDescription || "",
-      data.category,
+      categories,
       data.price,
       data.flowersAmount || 0,
       data.buyAmount || 0,
@@ -139,7 +146,7 @@ const Bouquet = {
       "imgUrl",
       "shortDescription",
       "longDescription",
-      "category",
+      "categories",
       "price",
       "flowersAmount",
       "buyAmount",
@@ -152,10 +159,18 @@ const Bouquet = {
     for (const field of allowedFields) {
       if (data[field] !== undefined) {
         paramIdx++;
-        // Quote camelCase fields for PostgreSQL
         const col = /[A-Z]/.test(field) ? `"${field}"` : field;
-        setClauses.push(`${col} = $${paramIdx}`);
-        params.push(data[field]);
+
+        if (field === "categories") {
+          const cats = Array.isArray(data.categories)
+            ? data.categories
+            : [data.categories];
+          setClauses.push(`${col} = $${paramIdx}::text[]`);
+          params.push(cats);
+        } else {
+          setClauses.push(`${col} = $${paramIdx}`);
+          params.push(data[field]);
+        }
       }
     }
 
@@ -212,7 +227,7 @@ const Bouquet = {
     params.push(fetchLimit);
 
     const sql = `
-      SELECT id, name, "imgUrl", "shortDescription", category, price,
+      SELECT id, name, "imgUrl", "shortDescription", categories, price,
              "creationDate", "updationDate"
       FROM bouquets
       WHERE ${conditions.join(" AND ")}
