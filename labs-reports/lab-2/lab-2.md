@@ -17,10 +17,14 @@
 [Google Algorithms](https://docs.google.com/spreadsheets/d/1IWLYZXXtQiL8Pp_jhzEf_iIi2EM6jCHqM8kHAXyUsVU/edit?gid=1280180942#gid=1280180942)
 
 ## 5. Скріншот сторінки /about
-... in development
+
+[About1](./screenshots/about-1.png)
+
+[About2](./screenshots/about-2.png)
 
 ## 6. Скріншот профілю флористів
-... in development
+
+[Florist](./screenshots/florist.png)
 
 ## 7. Заповнений E-E-A-T чек-ліст
 
