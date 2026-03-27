@@ -20,3 +20,6 @@ flowerlab/
 - **Backend:** Node.js, Express
 - **БД:** PostgreSQL
 - **Локальна розробка:** Docker Compose
+
+## Звіти лабораторних
+Звіти зберігаємо у папці labs-reports, labs-reports поділена на папки відповідно до лабораторних робіт
