@@ -18,13 +18,13 @@
 
 ## 5. Скріншот сторінки /about
 
-[About1](./screenshots/about-1.png)
+![About1](./screenshots/about-1.png)
 
-[About2](./screenshots/about-2.png)
+![About2](./screenshots/about-2.png)
 
 ## 6. Скріншот профілю флористів
 
-[Florist](./screenshots/florist.png)
+![Florist](./screenshots/florist.png)
 
 ## 7. Заповнений E-E-A-T чек-ліст
 
