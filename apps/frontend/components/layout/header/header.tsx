@@ -11,7 +11,14 @@ export default function Header() {
     <header className="h-20 bg-[#E55473]/50 p-10 flex items-center justify-between">
       <p className="text-xl text-white">Flower Lab</p>
 
-      <div className="flex space-x-5">
+      <div className="flex space-x-5 items-center">
+        <Link
+          href={"/about-us"}
+          className="cursor-pointer bg-white rounded-xl p-2 text-[#E55473]"
+        >
+          About us
+        </Link>
+
         <button
           onClick={() => setIsSearchOpen(true)}
           className="cursor-pointer"

@@ -1,4 +1,4 @@
-export default function AboutPage() {
+export default function AboutUsPage() {
   return (
     <section className="bg-gradient-to-b from-pink-50 via-rose-50 to-white py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
