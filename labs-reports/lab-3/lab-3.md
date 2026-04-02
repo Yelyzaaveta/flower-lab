@@ -2,6 +2,7 @@
 ## Семантичне ядро, кластеризація та структура сайту — FlowerLab
 
 **Сайт:** https://front-production-fd79.up.railway.app/  
+
 ---
 
 ## Завдання 1 — Класифікація пошукових запитів (Search Intent)
