@@ -16,7 +16,7 @@ export default function Header() {
           href={"/about-us"}
           className="cursor-pointer bg-white rounded-xl p-2 text-[#E55473]"
         >
-          About us
+          Про нас
         </Link>
 
         <button
