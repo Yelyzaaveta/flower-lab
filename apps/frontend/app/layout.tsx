@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Flower Lab | Головна сторінка каталогу",
   description:
     "Магазин квітів Flower Lab — стильні букети, свіжі квіти та композиції для будь-якої події. Замовляйте квіти онлайн з доставкою та даруйте емоції близьким.",
+  alternates: {
+    canonical: "https://front-production-fd79.up.railway.app/",
+  },
 };
 
 export default function RootLayout({
