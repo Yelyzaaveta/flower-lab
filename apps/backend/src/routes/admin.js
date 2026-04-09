@@ -3,6 +3,26 @@ const auth = require("../middleware/auth");
 const db = require("../config/db");
 const { generateSlug } = require("../utils/slug");
 
+// Helper to generate unique slug
+async function generateUniqueSlug(baseSlug, table, idToUpdate) {
+  let slug = baseSlug;
+  let counter = 1;
+
+  while (true) {
+    const existing = await db.query(
+      `SELECT id FROM ${table} WHERE slug = $1 AND id != $2`,
+      [slug, idToUpdate]
+    );
+
+    if (existing.rows.length === 0) {
+      return slug;
+    }
+
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+}
+
 // Protected route - only authenticated admins
 router.post("/populate-slugs", auth, async (req, res, next) => {
   try {
@@ -15,7 +35,8 @@ router.post("/populate-slugs", auth, async (req, res, next) => {
     );
 
     for (const bouquet of bouquetsRes.rows) {
-      const slug = generateSlug(bouquet.name);
+      const baseSlug = generateSlug(bouquet.name);
+      const slug = await generateUniqueSlug(baseSlug, "bouquets", bouquet.id);
       await db.query("UPDATE bouquets SET slug = $1 WHERE id = $2", [
         slug,
         bouquet.id,
@@ -29,7 +50,12 @@ router.post("/populate-slugs", auth, async (req, res, next) => {
     );
 
     for (const category of categoriesRes.rows) {
-      const slug = generateSlug(category.name);
+      const baseSlug = generateSlug(category.name);
+      const slug = await generateUniqueSlug(
+        baseSlug,
+        "categories",
+        category.id
+      );
       await db.query("UPDATE categories SET slug = $1 WHERE id = $2", [
         slug,
         category.id,
