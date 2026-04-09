@@ -10,6 +10,7 @@ const bouquetRoutes = require("./routes/bouquets");
 const categoryRoutes = require("./routes/categories");
 const authRoutes = require("./routes/auth");
 const searchRoutes = require("./routes/search");
+const adminRoutes = require("./routes/admin");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -25,6 +26,7 @@ app.use("/bouquets", bouquetRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/auth", authRoutes);
 app.use("/search", searchRoutes);
+app.use("/admin", adminRoutes);
 
 // Health check
 app.get("/health", (req, res) => {
