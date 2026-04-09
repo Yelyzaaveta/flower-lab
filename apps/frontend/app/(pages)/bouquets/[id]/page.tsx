@@ -5,6 +5,7 @@ import BackToMainBtn from "@/components/back-to-main-btn";
 import RelatedBouquetesSection from "./_components/related-bouquetes";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Flower Lab | Обрана квітковa композиція",
@@ -31,6 +32,13 @@ export default async function BouquetProductPage({
           Переглянути профіль флориста
         </Link>
       </div>
+      <Breadcrumbs
+        items={[
+          { label: "Головна", href: "/" },
+          { label: "Букети", href: "/bouquets" },
+          { label: `${data.name}`, href: `/bouquets/${id}` },
+        ]}
+      />
       <BouquetCharacteristicsSection bouquet={data} />
       <RelatedBouquetesSection relatedBouquet={relatedBouquets} />
     </MaxWidthWrapper>
