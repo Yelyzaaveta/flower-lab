@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default async function BouquetProductPage({
   params,
 }: {
-  params: Promise<{ id: number }>;
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
   const { data, relatedBouquets } = await getBouquetById(id);
@@ -35,8 +35,8 @@ export default async function BouquetProductPage({
       <Breadcrumbs
         items={[
           { label: "Головна", href: "/" },
-          { label: "Букети", href: "/bouquets" },
-          { label: `${data.name}`, href: `/bouquets/${id}` },
+          { label: "Букети" },
+          { label: `${data.name}`, href: `/bouquets/${data.slug}` },
         ]}
       />
       <BouquetCharacteristicsSection bouquet={data} />

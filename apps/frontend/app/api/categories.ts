@@ -10,7 +10,7 @@ export const getCategories = async (): Promise<Category[]> => {
     return data.data
 }
 
-export const getCategoryById = async (id: number): Promise<Category> => {
+export const getCategoryById = async (id: number | string): Promise<Category> => {
     const res = await fetch(`${API_URL}/categories/${id}`);
 
     if (!res.ok) {
@@ -109,4 +109,14 @@ export const createCategory = async (
     const json = await res.json();
 
     return json.data;
+};
+
+export const getCategoryBouquets = async (id: string | number): Promise<{ data: any[] }> => {
+    const res = await fetch(`${API_URL}/categories/${id}/bouquets`);
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch category bouquets");
+    }
+
+    return res.json();
 };

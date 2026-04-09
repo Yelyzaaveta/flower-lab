@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { generateSlug } = require("../utils/slug");
 
 const Category = {
   /**
@@ -6,7 +7,7 @@ const Category = {
    */
   async findAll() {
     const sql = `
-      SELECT id, name, "previewImgUrl", description
+      SELECT id, name, slug, "previewImgUrl", description
       FROM categories
       ORDER BY id
     `;
@@ -19,7 +20,7 @@ const Category = {
    */
   async findById(id) {
     const sql = `
-      SELECT c.id, c.name, c.description, c."previewImgUrl",
+      SELECT c.id, c.name, c.slug, c.description, c."previewImgUrl",
              (SELECT COUNT(*) FROM bouquets b WHERE c.name = ANY(b.categories))::int AS "bouquetsAmount"
       FROM categories c
       WHERE c.id = $1
@@ -29,16 +30,32 @@ const Category = {
   },
 
   /**
+   * Get a single category by slug with bouquet count.
+   */
+  async findBySlug(slug) {
+    const sql = `
+      SELECT c.id, c.name, c.slug, c.description, c."previewImgUrl",
+             (SELECT COUNT(*) FROM bouquets b WHERE c.name = ANY(b.categories))::int AS "bouquetsAmount"
+      FROM categories c
+      WHERE c.slug = $1
+    `;
+    const { rows } = await db.query(sql, [slug]);
+    return rows[0] || null;
+  },
+
+  /**
    * Create a new category.
    */
   async create(data) {
+    const slug = generateSlug(data.name);
     const sql = `
-      INSERT INTO categories (name, description, "previewImgUrl")
-      VALUES ($1, $2, $3)
-      RETURNING id, name, description, "previewImgUrl", "creationDate", "updationDate"
+      INSERT INTO categories (name, slug, description, "previewImgUrl")
+      VALUES ($1, $2, $3, $4)
+      RETURNING id, name, slug, description, "previewImgUrl", "creationDate", "updationDate"
     `;
     const params = [
       data.name,
+      slug,
       data.description || "",
       data.previewImgUrl || "",
     ];

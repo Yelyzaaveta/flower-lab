@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { generateSlug } = require("../utils/slug");
 
 const Bouquet = {
   /**
@@ -51,7 +52,7 @@ const Bouquet = {
     params.push(fetchLimit);
 
     const sql = `
-      SELECT id, name, "imgUrl", "shortDescription", categories, price,
+      SELECT id, name, slug, "imgUrl", "shortDescription", categories, price,
              "creationDate", "updationDate", "longDescription", "flowersAmount"
       FROM bouquets
       ${where}
@@ -79,7 +80,7 @@ const Bouquet = {
    */
   async findById(id) {
     const sql = `
-      SELECT id, name, "imgUrl", "shortDescription", "longDescription",
+      SELECT id, name, slug, "imgUrl", "shortDescription", "longDescription",
              categories, price, "flowersAmount", "buyAmount",
              "creationDate", "updationDate"
       FROM bouquets
@@ -90,18 +91,47 @@ const Bouquet = {
   },
 
   /**
+   * Get a single bouquet by slug with full details.
+   */
+  async findBySlug(slug) {
+    const sql = `
+      SELECT id, name, slug, "imgUrl", "shortDescription", "longDescription",
+             categories, price, "flowersAmount", "buyAmount",
+             "creationDate", "updationDate"
+      FROM bouquets
+      WHERE slug = $1
+    `;
+    const { rows } = await db.query(sql, [slug]);
+    return rows[0] || null;
+  },
+
+  /**
    * Get 3 related bouquets sharing at least one category, with closest price.
    */
   async findRelated(bouquetId, categories, price) {
     if (!categories || categories.length === 0) return [];
     const sql = `
-      SELECT id, name, "imgUrl", price, "shortDescription", categories
+      SELECT id, name, slug, "imgUrl", price, "shortDescription", categories
       FROM bouquets
       WHERE categories && $1 AND id != $2
       ORDER BY ABS(price - $3), id
       LIMIT 3
     `;
     const { rows } = await db.query(sql, [categories, bouquetId, price]);
+    return rows;
+  },
+
+  /**
+   * Get bouquets by category name.
+   */
+  async findByCategory(categoryName) {
+    const sql = `
+      SELECT id, name, slug, "imgUrl", price, "shortDescription", categories
+      FROM bouquets
+      WHERE $1 = ANY(categories)
+      ORDER BY "updationDate" DESC, id DESC
+    `;
+    const { rows } = await db.query(sql, [categoryName]);
     return rows;
   },
 
@@ -115,16 +145,19 @@ const Bouquet = {
         ? [data.categories]
         : [];
 
+    const slug = generateSlug(data.name);
+
     const sql = `
-      INSERT INTO bouquets (name, "imgUrl", "shortDescription", "longDescription",
+      INSERT INTO bouquets (name, slug, "imgUrl", "shortDescription", "longDescription",
                             categories, price, "flowersAmount", "buyAmount")
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING id, name, "imgUrl", "shortDescription", "longDescription",
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING id, name, slug, "imgUrl", "shortDescription", "longDescription",
                 categories, price, "flowersAmount", "buyAmount",
                 "creationDate", "updationDate"
     `;
     const params = [
       data.name,
+      slug,
       data.imgUrl || "",
       data.shortDescription || "",
       data.longDescription || "",
@@ -227,7 +260,7 @@ const Bouquet = {
     params.push(fetchLimit);
 
     const sql = `
-      SELECT id, name, "imgUrl", "shortDescription", categories, price,
+      SELECT id, name, slug, "imgUrl", "shortDescription", categories, price,
              "creationDate", "updationDate"
       FROM bouquets
       WHERE ${conditions.join(" AND ")}

@@ -1,6 +1,7 @@
 export type Bouquet = {
   id: number
   name: string
+  slug: string
   imgUrl: string
   shortDescription: string
   longDescription: string

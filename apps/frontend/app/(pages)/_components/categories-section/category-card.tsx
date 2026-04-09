@@ -28,7 +28,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
       </div>
 
       <Link
-        href={`/categories/${category.id}`}
+        href={`/categories/${category.slug}`}
         className="bg-[#BBFF63] p-2 rounded-xl text-[#242323] mt-auto"
       >
         <p>Переглянути категорію </p>

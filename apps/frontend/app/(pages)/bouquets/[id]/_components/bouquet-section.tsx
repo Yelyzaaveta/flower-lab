@@ -1,25 +1,51 @@
+"use client";
+
 import { Bouquet } from "@/lib/types/bouquet";
 import { Quote } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getCategories } from "@/app/api/categories";
 
 interface SectionProps {
   bouquet: Bouquet;
 }
+
 export default function BouquetCharacteristicsSection({
   bouquet,
 }: SectionProps) {
+  const [categoryMap, setCategoryMap] = useState<Map<string, string>>(new Map());
+
+  useEffect(() => {
+    getCategories().then((categories) => {
+      const map = new Map(categories.map((c) => [c.name, c.slug]));
+      setCategoryMap(map);
+    });
+  }, []);
+
   return (
     <section className="flex justify-between">
       <div className="relative">
         <div className="absolute top-5 -right-6 flex flex-col gap-1">
-          {(bouquet.categories ?? []).map((cat) => (
-            <span
-              key={cat}
-              className="w-fit px-3 py-2 rounded-xl bg-[#9AF24B] text-[#4A4747] font-medium"
-            >
-              {cat}
-            </span>
-          ))}
+          {(bouquet.categories ?? []).map((cat) => {
+            const slug = categoryMap.get(cat);
+            return slug ? (
+              <Link
+                key={cat}
+                href={`/categories/${slug}`}
+                className="w-fit px-3 py-2 rounded-xl bg-[#9AF24B] text-[#4A4747] font-medium hover:bg-[#7fd630] transition-colors"
+              >
+                {cat}
+              </Link>
+            ) : (
+              <span
+                key={cat}
+                className="w-fit px-3 py-2 rounded-xl bg-[#9AF24B] text-[#4A4747] font-medium"
+              >
+                {cat}
+              </span>
+            );
+          })}
         </div>
         <Image
           src={bouquet.imgUrl}

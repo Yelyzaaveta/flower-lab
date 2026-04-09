@@ -82,7 +82,7 @@ export function SearchDrawer({ isOpen, onClose }: SearchDrawerProps) {
                 key={bouquet.id}
                 className="p-3 hover:bg-gray-100 cursor-pointer"
               >
-                <Link href={`/bouquets/${bouquet.id}`}>{bouquet.name}</Link>
+                <Link href={`/bouquets/${bouquet.slug}`}>{bouquet.name}</Link>
               </div>
             ))}
           </div>

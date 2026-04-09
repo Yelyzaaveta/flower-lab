@@ -29,7 +29,7 @@ export default function BouquetCard({ bouquet }: BouquteCardProps) {
         </p>
 
         <Link
-          href={`/bouquets/${bouquet.id}`}
+          href={`/bouquets/${bouquet.slug}`}
           className="bg-[#BBFF63] p-2 rounded-xl text-[#242323]"
         >
           <p>Переглянути</p>

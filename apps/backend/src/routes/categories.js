@@ -5,6 +5,7 @@ const upload = require("../middleware/upload");
 
 // Public routes
 router.get("/", categoryController.getAll);
+router.get("/:id/bouquets", categoryController.getBouquets);
 router.get("/:id", categoryController.getById);
 
 // Admin routes (protected)

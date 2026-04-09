@@ -1,4 +1,5 @@
 const Category = require("../models/category");
+const Bouquet = require("../models/bouquet");
 
 const categoryController = {
   /**
@@ -16,12 +17,21 @@ const categoryController = {
 
   /**
    * GET /categories/:id
-   * Get a single category with bouquet count.
+   * Get a single category with bouquet count (by ID or slug).
    */
   async getById(req, res, next) {
     try {
       const { id } = req.params;
-      const category = await Category.findById(parseInt(id, 10));
+      let category;
+
+      // Try to parse as number first
+      const numId = parseInt(id, 10);
+      if (!isNaN(numId)) {
+        category = await Category.findById(numId);
+      } else {
+        // If not a number, treat as slug
+        category = await Category.findBySlug(id);
+      }
 
       if (!category) {
         return res.status(404).json({
@@ -90,6 +100,41 @@ const categoryController = {
       }
 
       res.json({ message: "Category updated successfully" });
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  /**
+   * GET /categories/:id/bouquets
+   * Get all bouquets in a category.
+   */
+  async getBouquets(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      // Try to parse as number first
+      const numId = parseInt(id, 10);
+      let category;
+
+      if (!isNaN(numId)) {
+        category = await Category.findById(numId);
+      } else {
+        // If not a number, treat as slug
+        category = await Category.findBySlug(id);
+      }
+
+      if (!category) {
+        return res.status(404).json({
+          error: {
+            code: "NOT_FOUND",
+            message: "Category not found",
+          },
+        });
+      }
+
+      const bouquets = await Bouquet.findByCategory(category.name);
+      res.json({ data: bouquets });
     } catch (err) {
       next(err);
     }

@@ -35,12 +35,21 @@ async getAll(req, res, next) {
 
   /**
    * GET /bouquets/:id
-   * Get a single bouquet with related bouquets.
+   * Get a single bouquet with related bouquets (by ID or slug).
    */
   async getById(req, res, next) {
     try {
       const { id } = req.params;
-      const bouquet = await Bouquet.findById(parseInt(id, 10));
+      let bouquet;
+
+      // Try to parse as number first
+      const numId = parseInt(id, 10);
+      if (!isNaN(numId)) {
+        bouquet = await Bouquet.findById(numId);
+      } else {
+        // If not a number, treat as slug
+        bouquet = await Bouquet.findBySlug(id);
+      }
 
       if (!bouquet) {
         return res.status(404).json({
