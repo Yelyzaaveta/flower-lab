@@ -27,7 +27,11 @@ export default async function CategoryPage({
       {bouquets.length > 0 && (
         <div className="mt-16">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-8">Букети в цій категорії</h2>
-          <BouquetsCardsSection bouquets={bouquets} />
+          <BouquetsCardsSection
+            bouquets={bouquets}
+            categorySlug={category.slug}
+            categoryName={category.name}
+          />
         </div>
       )}
     </MaxWidthWrapper>

@@ -15,10 +15,13 @@ export const metadata: Metadata = {
 
 export default async function BouquetProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ category?: string; categoryName?: string }>;
 }) {
   const { id } = await params;
+  const { category, categoryName } = await searchParams;
   const { data, relatedBouquets } = await getBouquetById(id);
 
   return (
@@ -35,7 +38,9 @@ export default async function BouquetProductPage({
       <Breadcrumbs
         items={[
           { label: "Головна", href: "/" },
-          { label: "Букети" },
+          ...(category && categoryName
+            ? [{ label: categoryName, href: `/categories/${category}` }]
+            : [{ label: "Букети" }]),
           { label: `${data.name}`, href: `/bouquets/${data.slug}` },
         ]}
       />

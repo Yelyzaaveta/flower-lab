@@ -4,9 +4,15 @@ import Link from "next/link";
 
 interface BouquteCardProps {
   bouquet: Bouquet;
+  categorySlug?: string;
+  categoryName?: string;
 }
 
-export default function BouquetCard({ bouquet }: BouquteCardProps) {
+export default function BouquetCard({
+  bouquet,
+  categorySlug,
+  categoryName
+}: BouquteCardProps) {
   return (
     <div className="bg-white p-3 flex flex-col items-center rounded-2xl lg:w-90 2xl:w-100 ">
       <Image
@@ -29,7 +35,11 @@ export default function BouquetCard({ bouquet }: BouquteCardProps) {
         </p>
 
         <Link
-          href={`/bouquets/${bouquet.slug}`}
+          href={`/bouquets/${bouquet.slug}${
+            categorySlug && categoryName
+              ? `?category=${categorySlug}&categoryName=${encodeURIComponent(categoryName)}`
+              : ""
+          }`}
           className="bg-[#BBFF63] p-2 rounded-xl text-[#242323]"
         >
           <p>Переглянути</p>
