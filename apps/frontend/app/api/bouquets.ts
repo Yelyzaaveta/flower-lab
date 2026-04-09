@@ -33,7 +33,7 @@ export const getBouquets = async (options: GetBouquetsOptions = {}) => {
 };
 
 
-export const getBouquetById = async (id: number): Promise<BouquetWithRelated> => {
+export const getBouquetById = async (id: number | string): Promise<BouquetWithRelated> => {
     const res = await fetch(`${API_URL}/bouquets/${id}`);
 
     if (!res.ok) {
